@@ -14,11 +14,10 @@ scalaVersion := "2.10.6"
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 publishTo := {
-  val nexus = "https://oss.sonatype.org"
   if (isSnapshot.value)
-    Some("snapshots" at s"${nexus}/content/repositories/snapshots")
+    Some("Tapad Nexus Snapshots" at "https://nexus.tapad.com/repository/snapshots")
   else
-    Some("releases" at s"${nexus}/service/local/staging/deploy/maven2")
+    Some("Tapad Nexus Releases" at "https://nexus.tapad.com/repository/releases")
 }
 
 publishMavenStyle := true
@@ -48,9 +47,7 @@ pomExtra := (
   </developers>
 )
 
-PgpKeys.useGpg := true
-
-PgpKeys.gpgCommand := "/usr/local/bin/gpg2"
+PgpKeys.useGpg := false
 
 releaseSettings
 
@@ -63,10 +60,9 @@ ReleaseKeys.releaseProcess := Seq(
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  ReleaseStep(action = Command.process("publishSigned", _)),
+  publishArtifacts,
   setNextVersion,
   commitNextVersion,
-  ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
   pushChanges
 )
 
